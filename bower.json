@@ -1,0 +1,24 @@
+{
+  "name": "UsersList",
+  "version": "0.0.0",
+  "authors": [
+    "nikolay-lesko <nikolay.v.lesko@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "~1.4.0",
+    "bootstrap": "~3.3.4",
+    "underscore": "~1.8.3",
+    "ui-router": "~0.2.15",
+    "angular-bootstrap": "~0.13.0",
+    "jquery": "~2.1.4"
+  }
+}

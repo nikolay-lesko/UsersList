@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Users List</title>
+
+    <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.min.css"/>
+</head>
+
+<body ng-app="UsersList">
+
+    <div ui-view></div>
+
+    <script src="vendor/underscore/underscore-min.js"></script>
+    <script src="vendor/jquery/dist/jquery.min.js"></script>
+    <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <script src="vendor/angular/angular.min.js"></script>
+    <script src="vendor/ui-router/release/angular-ui-router.min.js"></script>
+    <script src="vendor/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+
+    <script src="js/modules.js"></script>
+
+    <script src="js/services/fakeDataService.js"></script>
+    <script src="js/services/usersService.js"></script>
+    <script src="js/services/dialogsService.js"></script>
+
+    <script src="js/directives/infinitePager.js"></script>
+    <script src="js/directives/sortField.js"></script>
+
+    <script src="js/controllers/usersListController.js"></script>
+    <script src="js/controllers/editUserDialogController.js"></script>
+
+    <script src="js/app.js"></script>
+
+</body>
+</html>
