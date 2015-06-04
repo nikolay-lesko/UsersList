@@ -1,116 +1,129 @@
-<div class="container" style="position: relative">
-    <table class="table" style="position: relative; left:0; width: calc(100% - 17px);">
-
-        <thead>
-            <tr>
-                <td style="width:10%">
+<div class="users-list">
+    <div class="container">
+        <div class="users-header form form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-2 col-xs-2">
                     <sort-field for="Id" current="Sort.Field" desc="Sort.Desc">Id</sort-field>
-
+                </div>
+                <div class="col-sm-2 col-xs-2">
+                    <sort-field for="FirstName" current="Sort.Field" desc="Sort.Desc">First Name</sort-field>
+                </div>
+                <div class="col-sm-2 col-xs-2">
+                    <sort-field for="LastName" current="Sort.Field" desc="Sort.Desc">Last Name</sort-field>
+                </div>
+                <div class="col-sm-4 col-xs-2">
+                    <sort-field for="Email" current="Sort.Field" desc="Sort.Desc">Email</sort-field>
+                </div>
+                <div class="col-sm-2 col-xs-3">
+                    <sort-field for="Age" current="Sort.Field" desc="Sort.Desc">Age</sort-field>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-2 col-xs-2">
                     <input type="text"
                            ng-model="Search.Id"
                            ng-model-options="{ debounce: 300 }"
                            ng-change="onSearchChanged()"
                            class="form-control"/>
-                </td>
-                <td style="width:30%">
-                    <sort-field for="FirstName" current="Sort.Field" desc="Sort.Desc">First Name</sort-field>
-
+                </div>
+                <div class="col-sm-2 col-xs-2">
                     <input type="text"
                            ng-model="Search.FirstName"
                            ng-model-options="{ debounce: 300 }"
                            ng-change="onSearchChanged()"
                            class="form-control"/>
-                </td>
-                <td style="width:25%">
-                    <sort-field for="LastName" current="Sort.Field" desc="Sort.Desc">Last Name</sort-field>
-
+                </div>
+                <div class="col-sm-2 col-xs-2">
                     <input type="text"
                            ng-model="Search.LastName"
                            ng-model-options="{ debounce: 300 }"
                            ng-change="onSearchChanged()"
                            class="form-control"/>
-                </td>
-                <td style="width:25%">
-                    <sort-field for="Email" current="Sort.Field" desc="Sort.Desc">Email</sort-field>
-
+                </div>
+                <div class="col-sm-4 col-xs-2">
                     <input type="text"
                            ng-model="Search.Email"
                            ng-model-options="{ debounce: 300 }"
                            ng-change="onSearchChanged()"
                            class="form-control"/>
-                </td>
-                <td style="width:10%">
-                    <sort-field for="Age" current="Sort.Field" desc="Sort.Desc">Age</sort-field>
-
+                </div>
+                <div class="col-sm-2 col-xs-3">
                     <select ng-options="s.Title for s in AgeSearches"
                             ng-model="Search.Age"
                             ng-change="onSearchChanged()"
                             class="form-control">
                     </select>
-                </td>
-            </tr>
-        </thead>
-    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <span class="glyphicon glyphicon-trash"
-          style="cursor: pointer; position: absolute;right: -40px;top: 80px;font-size: 1.5em;"
+    <span class="delete-button glyphicon glyphicon-trash"
           ng-click="onDeleteClick()"
           ng-show="isDeleteVisible()">
     </span>
 
-</div>
+    <div class="users-body container" infinite-pager="Pager">
+        <div ng-repeat="page in Pager.Pages" infinite-pager-page="page.Index" class="form form-horizontal">
+            <div ng-repeat="user in page.Items"
+                 ng-class="{ selected: isSelected(user) }"
+                 ng-click="!isEditing(user) && onToggleSelectUserClick(user)"
+                 class="user form-group">
+                <div ng-if="!isEditing(user)">
+                    <div class="col-sm-2 col-xs-2">{{user.Id}}</div>
+                    <div class="col-sm-2 col-xs-2">{{user.FirstName}}</div>
+                    <div class="col-sm-2 col-xs-2">{{user.LastName}}</div>
+                    <div class="col-sm-4 col-xs-2">{{user.Email}}</div>
+                    <div class="col-sm-2 col-xs-4">
+                        {{user.Age}}
 
-<div class="container"
-     style="overflow: auto; position: absolute; top: 150px; bottom: 80px; height1: 250px"
-     infinite-pager="Pager">
+                        <span class="action-button glyphicon glyphicon-folder-open pull-right"
+                              ng-click="onEditModalClick(user); $event.stopPropagation();">
+                        </span>
 
-    <table class="table">
+                        <span class="action-button glyphicon glyphicon-pencil pull-right"
+                              ng-click="onEditInlineClick(user); $event.stopPropagation();">
+                        </span>
+                    </div>
+                </div>
 
-        <tbody ng-repeat="page in Pager.Pages" infinite-pager-page="page.Index">
-
-            <tr ng-repeat="user in page.Items"
-                ng-class="{ info: user.IsSelected }"
-                ng-click="onToggleSelectUserClick(user)"
-                style="cursor: pointer">
-                <td style="width:10%">{{user.Id}}</td>
-                <td style="width:30%">{{user.FirstName}}</td>
-                <td style="width:25%">{{user.LastName}}</td>
-                <td style="width:25%">{{user.Email}}</td>
-                <td style="width:10%">
-                    {{user.Age}}
-
-                    <span class="glyphicon glyphicon-folder-open pull-right"
-                          ng-click="editModal(user); $event.stopPropagation();"/>
-
-                    <span class="glyphicon glyphicon-pencil pull-right" style="margin-right: 5px"
-                          ng-click="editInline(user); $event.stopPropagation();"/>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-</div>
-
-<nav class="navbar navbar-default navbar-fixed-bottom">
-    <div class="container">
-        <div class="form form-inline">
-            <div class="form-group">
-                <label>Page Size</label>
-
-                <select ng-model="Pager.PageSize"
-                        ng-options="s for s in PageSizes"
-                        class="form-control">
-                </select>
-            </div>
-            <div class="form-group" style="padding-top: 5px">
-                <pagination items-per-page="Pager.PageSize"
-                            total-items="Pager.TotalResults"
-                            max-size="10"
-                            rotate="false"
-                            ng-model="Pager.PageIndex"
-                            ng-change="Pager.gotoPage(Pager.PageIndex)">
-                </pagination>
+                <inline-user-editor ng-if="isEditing(user)"
+                                    user="user"
+                                    on-save="save"
+                                    on-cancel="cancelEdit()">
+                </inline-user-editor>
             </div>
         </div>
     </div>
-</nav>
+
+    <nav class="navbar navbar-default navbar-fixed-bottom">
+        <div class="container">
+            <div class="form form-inline">
+
+                <button class="btn btn-primary create-button"
+                        ng-click="onCreateClick()">
+                    Create
+                </button>
+
+                <div class="form-group">
+                    <label>Page Size</label>
+
+                    <select ng-model="Pager.PageSize"
+                            ng-options="s for s in PageSizes"
+                            class="form-control">
+                    </select>
+                </div>
+                <div class="paging-section form-group">
+                    <pagination items-per-page="Pager.PageSize"
+                                total-items="Pager.TotalResults"
+                                max-size="10"
+                                rotate="false"
+                                ng-model="Pager.PageIndex"
+                                ng-change="Pager.gotoPage(Pager.PageIndex)">
+                    </pagination>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+</div>

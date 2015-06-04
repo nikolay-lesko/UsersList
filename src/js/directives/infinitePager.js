@@ -14,6 +14,7 @@
 
                     var minPage = undefined;
                     var maxPage = undefined;
+                    var noScrollTrack = false;
 
                     var pagerAccessor = $parse($attrs.infinitePager);
                     var pager = pagerAccessor($scope);
@@ -28,6 +29,10 @@
                     pager.PageIndex = 0;
 
                     pager.gotoPage = function (pageIndex, forceReload) {
+                        loadPage(pageIndex, forceReload, false);
+                    };
+
+                    function loadPage(pageIndex, forceReload, doNotScroll) {
 
                         pageIndex = Math.max(pageIndex, 1);
 
@@ -37,80 +42,91 @@
 
                         if (pageIndex >= minPage && pageIndex <= maxPage) {
                             if (!forceReload) {
-                                var pageElement = _.findWhere(pager.Pages, {Index: pageIndex}).Element;
-                                scrollToElement(pageElement);
-
+                                scrollToPage(pageIndex);
                                 return;
                             }
                         }
 
                         pager.dataSource(pageIndex, pager.PageSize)
                             .then(function (data) {
-                                //pager.PageIndex = data.Pager.PageIndex;
                                 pager.TotalResults = data.Pager.Total;
                                 pager.PageIndex = adjustPageIndex(pager.PageIndex);
 
                                 var page = {
-                                    Index: pageIndex,// pager.PageIndex,
+                                    Index: pageIndex,
                                     Items: data.Items
                                 };
 
                                 if (pageIndex == minPage - 1) {
                                     pager.Pages.unshift(page);
-
-                                    setTimeout(function () {
-                                        scrollToElement(pager.Pages[1].Element)
-                                    }, 0);
-
                                     minPage--;
+
+                                    doScroll(pageIndex + 1);
                                 }
                                 else if (pageIndex == maxPage + 1) {
                                     pager.Pages.push(page);
                                     maxPage++;
+
+                                    doScroll(pageIndex);
                                 }
-                                else { //if (!minPage || !maxPage || pager.PageIndex < minPage || pager.PageIndex > maxPage) {
+                                else {
                                     pager.Pages = [page];
                                     minPage = pageIndex;
                                     maxPage = pageIndex;
 
-                                    setTimeout(function () {
-                                        scrollToElement(page.Element);
-                                    }, 0);
+                                    doScroll(pageIndex);
                                 }
                             });
-                    };
 
-                    $scope.$watch(function () {
-                        return pager.PageSize;
-                    }, function (newValue, oldValue) {
-                        if (newValue == oldValue) {
-                            return;
-                        }
-
-                        pager.Pages = [];
-                        pager.TotalResults = 0;
-                        minPage = undefined;
-                        maxPage = undefined;
-
-                        pager.gotoPage(1);
-                    });
-
-                    pager.gotoPage(1);
-
-                    $element.scroll(_.throttle(function () {
-                        if ($element.scrollTop() == 0) {
-                            pager.gotoPage(minPage - 1);
-                        }
-                        else if ($element.scrollTop() + $element.outerHeight() >= $element[0].scrollHeight * 0.9) {
-                            var pageIndex = adjustPageIndex(maxPage + 1);
-
-                            if (pageIndex != pager.PageIndex) {
-                                pager.gotoPage(maxPage + 1);
+                        function doScroll(index) {
+                            if (!doNotScroll) {
+                                scrollToPage(index);
                             }
                         }
+                    };
 
-                        trackCurrentPage();
-                    }, 200));
+                    watchPageSize();
+                    watchScroll();
+                    loadPage(1);
+
+                    function watchPageSize() {
+                        $scope.$watch(function () {
+                            return pager.PageSize;
+                        }, function (newValue, oldValue) {
+                            if (angular.equals(newValue, oldValue)) {
+                                return;
+                            }
+
+                            pager.Pages = [];
+                            pager.TotalResults = 0;
+                            minPage = undefined;
+                            maxPage = undefined;
+
+                            loadPage(1, true, true);
+                        });
+                    }
+
+                    function watchScroll() {
+                        $element.scroll(_.throttle(function () {
+                            if (noScrollTrack) {
+                                noScrollTrack = false;
+                                return;
+                            }
+
+                            if ($element.scrollTop() == 0) {
+                                loadPage(minPage - 1, false);
+                            }
+                            else if ($element.scrollTop() + $element.outerHeight() >= $element[0].scrollHeight * 0.9) {
+                                var pageIndex = adjustPageIndex(maxPage + 1);
+
+                                if (pageIndex != pager.PageIndex) {
+                                    loadPage(maxPage + 1, false, true);
+                                }
+                            }
+
+                            trackCurrentPage();
+                        }, 200));
+                    }
 
                     function trackCurrentPage() {
                         for (var i = 0; i < pager.Pages.length; i++) {
@@ -129,7 +145,7 @@
                     function isVisible(pageElement) {
                         var viewTop = $element.scrollTop();
                         var viewHeight = $element.outerHeight();
-                        var viewMiddle = viewTop + viewHeight * 0.3;
+                        var viewMiddle = viewTop + viewHeight * 0.45;
 
                         var height = pageElement.outerHeight();
                         var top = pageElement.position().top + viewTop;
@@ -138,8 +154,14 @@
                         return (top <= viewMiddle && bottom >= viewMiddle);
                     }
 
-                    function scrollToElement(pageElement) {
-                        $element.scrollTop($element.scrollTop() + pageElement.position().top);
+                    function scrollToPage(pageIndex) {
+                        setTimeout(function () {
+                            var page = _.findWhere(pager.Pages, {Index: pageIndex});
+                            var pageElement = page.Element;
+
+                            noScrollTrack = true;
+                            $element.scrollTop($element.scrollTop() + pageElement.position().top);
+                        }, 0);
                     }
 
                     function adjustPageIndex(pageIndex) {
@@ -155,9 +177,9 @@
                 link: function (scope, element, attrs, infinitePagerController) {
                     var pageIndex = $parse(attrs.infinitePagerPage)(scope);
 
-                    var colors = ['red', 'green', 'blue', 'magenta', 'black'];
-
-                    element.css('border', 'solid 1px ' + colors[pageIndex - 1 % colors.length]);
+                    //var colors = ['red', 'green', 'blue', 'magenta', 'black'];
+                    //
+                    //element.css('border', 'solid 1px ' + colors[pageIndex - 1 % colors.length]);
 
                     infinitePagerController.setPageElement(pageIndex, element);
                 }

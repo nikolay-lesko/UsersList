@@ -23,6 +23,8 @@
             };
 
             $scope.$watch('Sort.Field+Sort.Desc', function () {
+                $scope.cancelEdit();
+
                 $scope.Pager.gotoPage($scope.Pager.PageIndex, true);
             });
 
@@ -44,15 +46,29 @@
             };
 
             $scope.onSearchChanged = function () {
+                $scope.cancelEdit();
+
                 $scope.Pager.gotoPage(1, true);
             };
 
+            var selectedIds = [];
+
+            $scope.isSelected = function (user) {
+                return _.contains(selectedIds, user.Id);
+            };
+
             $scope.isDeleteVisible = function () {
-                return getSelectedUsers().length > 0;
+                return selectedIds.length > 0;
             };
 
             $scope.onToggleSelectUserClick = function (user) {
-                user.IsSelected = !user.IsSelected;
+                var index = _.indexOf(selectedIds, user.Id);
+                if (index != -1) {
+                    selectedIds.splice(index, 1);
+                }
+                else {
+                    selectedIds.push(user.Id);
+                }
             };
 
             $scope.onDeleteClick = function () {
@@ -63,27 +79,61 @@
                             return user.Id;
                         });
 
-                        UsersService.delete(ids);
+                        UsersService
+                            .delete(ids)
+                            .then(function () {
+                                $scope.Pager.gotoPage($scope.Pager.PageIndex, true);
+                            });
+                    });
+            };
 
+            $scope.onEditModalClick = function (originalUser) {
+                editUserModal(originalUser);
+            };
+
+            $scope.onCreateClick = function () {
+                editUserModal({});
+            };
+
+            function editUserModal(user) {
+                DialogsService.editUser(user)
+                    .then(function (editedUser) {
+                        UsersService
+                            .save(editedUser)
+                            .then(function (storedUser) {
+                                $scope.Pager.gotoPage($scope.Pager.PageIndex, true);
+                            });
+                    });
+            }
+
+            var editingUserId = undefined;
+
+            $scope.isEditing = function (user) {
+                return user.Id == editingUserId;
+            };
+
+            $scope.onEditInlineClick = function (user) {
+                editingUserId = user.Id;
+            };
+
+            $scope.cancelEdit = function () {
+                editingUserId = undefined;
+            };
+
+            $scope.save = function (editedUser) {
+                $scope.cancelEdit();
+
+                UsersService
+                    .save(editedUser)
+                    .then(function (storedUser) {
                         $scope.Pager.gotoPage($scope.Pager.PageIndex, true);
                     });
-            };
-
-            $scope.editModal = function (originalUser) {
-                DialogsService.editUser(originalUser)
-                    .then(function (user) {
-                       var i = 0;
-                    });
-            };
-
-            $scope.editInline = function (user) {
-
             };
 
             function getSelectedUsers() {
                 return _.flatten(_.map($scope.Pager.Pages, function (page) {
                     return _.filter(page.Items, function (user) {
-                        return user.IsSelected;
+                        return $scope.isSelected(user);
                     });
                 }));
             }

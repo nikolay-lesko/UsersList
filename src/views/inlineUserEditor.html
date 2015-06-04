@@ -1,0 +1,94 @@
+<div ng-form="inlineForm" class="edit-inline">
+    <div class="col-sm-2 col-xs-2">{{EditingUser.Id}}</div>
+
+    <div class="col-sm-2 col-xs-2"
+         ng-class="{ 'has-error' : inlineForm.firstName.$dirty && inlineForm.firstName.$invalid }">
+
+        <input type="text"
+               name="firstName"
+               ng-model="EditingUser.FirstName"
+               required
+               alphabet-only
+               ng-pattern="/^[a-zA-Z]{3,}$/"
+               placeholder="First Name"
+               class="form-control"/>
+
+        <span ng-show="inlineForm.firstName.$dirty && inlineForm.firstName.$error.required"
+              class="help-block">
+            Field is required
+        </span>
+
+        <span ng-show="inlineForm.firstName.$dirty && inlineForm.firstName.$error.pattern"
+              class="help-block">
+            First Name should contain at least 3 letters
+        </span>
+    </div>
+
+    <div class="col-sm-2 col-xs-2"
+         ng-class="{ 'has-error' : inlineForm.lastName.$dirty && inlineForm.lastName.$invalid }">
+        <input type="text"
+               name="lastName"
+               ng-model="EditingUser.LastName"
+               required
+               alphabet-only
+               ng-pattern="/^[a-zA-Z]{3,}$/"
+               placeholder="Last Name"
+               class="form-control"/>
+
+        <span ng-show="inlineForm.lastName.$dirty && inlineForm.lastName.$error.required"
+              class="help-block">
+            Field is required
+        </span>
+
+        <span ng-show="inlineForm.lastName.$dirty && inlineForm.lastName.$error.pattern"
+              class="help-block">
+            Last Name should contain at least 3 letters
+        </span>
+    </div>
+
+    <div class="col-sm-4 col-xs-2"
+         ng-class="{ 'has-error' : inlineForm.email.$dirty && inlineForm.email.$invalid }">
+        <input type="email"
+               name="email"
+               ng-model="EditingUser.Email"
+               required
+               placeholder="Email"
+               class="form-control"/>
+
+        <span ng-show="inlineForm.email.$dirty && (inlineForm.email.$error.email || inlineForm.email.$error.required)"
+              class="help-block">
+            Invalid Email
+        </span>
+    </div>
+
+    <div class="col-sm-2 col-xs-4"
+         ng-class="{ 'has-error' : inlineForm.age.$dirty && inlineForm.age.$invalid }">
+        <input type="number"
+               ng-model="EditingUser.Age"
+               name="age"
+               required
+               min="1"
+               max="100"
+               class="form-control"/>
+
+        <span ng-show="inlineForm.age.$dirty && (inlineForm.age.$error.number || inlineForm.age.$error.required)"
+              class="help-block">
+            Invalid number
+        </span>
+
+        <span ng-show="inlineForm.age.$dirty && (inlineForm.age.$error.min || inlineForm.age.$error.max)"
+              class="help-block">
+            Age should be within 1 and 100
+        </span>
+
+        <div class="action-bar">
+            <span class="action-button glyphicon glyphicon-remove pull-right"
+                  ng-click="onCancel(); $event.stopPropagation();">
+            </span>
+
+            <span class="action-button glyphicon glyphicon-ok pull-right"
+                  ng-click="onSaveClick(inlineForm.$valid); $event.stopPropagation();">
+            </span>
+        </div>
+    </div>
+</div>

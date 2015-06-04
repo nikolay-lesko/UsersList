@@ -1,16 +1,18 @@
-<div class="modal-header">
-    <button type="button" class="close" ng-click="onCancelClick()">&times;</button>
+<form name="form" novalidate>
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="onCancelClick()">&times;</button>
 
-    <h4 class="modal-title" id="myModalLabel">
-        Edit user
-    </h4>
-</div>
+        <h4 class="modal-title" id="myModalLabel">
+            {{ User.Id ? 'Edit User' : 'Create User' }}
+        </h4>
+    </div>
 
-<div class="modal-body">
-    <ng-form name="form">
+    <div class="modal-body">
+
         <div class="form-horizontal">
 
-            <div class="form-group" ng-class="{ 'has-error' : form.firstName.$invalid }">
+            <div class="form-group"
+                 ng-class="{ 'has-error' : (form.$submitted || form.firstName.$touched) && form.firstName.$invalid }">
                 <label class="col-sm-3 control-label">First Name</label>
 
                 <div class="col-sm-9">
@@ -18,12 +20,25 @@
                            name="firstName"
                            ng-model="User.FirstName"
                            required
-                           minlength="3"
+                           alphabet-only
+                           ng-pattern="/^[a-zA-Z]{3,}$/"
                            class="form-control" placeholder="First Name"/>
+
+                        <span ng-show="(form.$submitted || form.firstName.$touched) && form.firstName.$error.required"
+                              class="help-block">
+                            Field is required
+                        </span>
+
+                        <span ng-show="(form.$submitted || form.firstName.$touched) && form.firstName.$error.pattern"
+                              class="help-block">
+                            First Name should contain at least 3 letters
+                        </span>
+
                 </div>
             </div>
 
-            <div class="form-group" ng-class="{ 'has-error' : form.lastName.$invalid }">
+            <div class="form-group"
+                 ng-class="{ 'has-error' : (form.$submitted || form.lastName.$touched) && form.lastName.$invalid }">
                 <label class="col-sm-3 control-label">Last Name</label>
 
                 <div class="col-sm-9">
@@ -31,12 +46,24 @@
                            name="lastName"
                            ng-model="User.LastName"
                            required
-                           minlength="3"
+                           alphabet-only
+                           ng-pattern="/^[a-zA-Z]{3,}$/"
                            class="form-control" placeholder="Last Name"/>
+
+                    <span ng-show="(form.$submitted || form.lastName.$touched) && form.lastName.$error.required"
+                          class="help-block">
+                        Field is required
+                    </span>
+
+                    <span ng-show="(form.$submitted || form.lastName.$touched) && form.lastName.$error.pattern"
+                          class="help-block">
+                        Last Name should contain at least 3 letters
+                    </span>
                 </div>
             </div>
 
-            <div class="form-group" ng-class="{ 'has-error' : form.email.$invalid }">
+            <div class="form-group"
+                 ng-class="{ 'has-error' : (form.$submitted || form.email.$touched) && form.email.$invalid }">
                 <label class="col-sm-3 control-label">Email</label>
 
                 <div class="col-sm-9">
@@ -45,10 +72,16 @@
                            ng-model="User.Email"
                            required
                            class="form-control" placeholder="Email"/>
+
+                    <span ng-show="(form.$submitted || form.email.$touched) && (form.email.$error.email || form.email.$error.required)"
+                          class="help-block">
+                        Invalid Email
+                    </span>
                 </div>
             </div>
 
-            <div class="form-group" ng-class="{ 'has-error' : form.age.$invalid }">
+            <div class="form-group"
+                 ng-class="{ 'has-error' : (form.$submitted || form.age.$touched) && form.age.$invalid }">
                 <label class="col-sm-3 control-label">Age</label>
 
                 <div class="col-sm-9">
@@ -56,15 +89,27 @@
                            ng-model="User.Age"
                            name="age"
                            required
-                           class="form-control">
-                    </input>
+                           min="1"
+                           max="100"
+                           class="form-control"/>
+
+                    <span ng-show="(form.$submitted || form.age.$touched) && (form.age.$error.number || form.age.$error.required)"
+                          class="help-block">
+                        Invalid number
+                    </span>
+
+                    <span ng-show="(form.$submitted || form.age.$touched) && (form.age.$error.min || form.age.$error.max)"
+                          class="help-block">
+                        Age should be within 1 and 100
+                    </span>
                 </div>
             </div>
         </div>
-    </ng-form>
-</div>
+    </div>
 
-<div class="modal-footer">
-    <button type="submit" class="btn btn-primary" ng-click="onSaveClick(form.$invalid)">Save</button>
-    <button type="button" class="btn btn-default" ng-click="onCancelClick()">Cancel</button>
-</div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary" ng-click="onSaveClick(form.$invalid)">Save</button>
+        <button type="button" class="btn btn-default" ng-click="onCancelClick()">Cancel</button>
+    </div>
+
+</form>

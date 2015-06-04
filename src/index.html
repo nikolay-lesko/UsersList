@@ -7,11 +7,40 @@
     <title>Users List</title>
 
     <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/styles.css"/>
+    <link rel="stylesheet" href="css/spin.css"/>
 </head>
 
 <body ng-app="UsersList">
 
-    <div ui-view></div>
+    <div ui-view>
+        <div class='uil-spin-css app-load-spinner'>
+            <div>
+                <div></div>
+            </div>
+            <div>
+                <div></div>
+            </div>
+            <div>
+                <div></div>
+            </div>
+            <div>
+                <div></div>
+            </div>
+            <div>
+                <div></div>
+            </div>
+            <div>
+                <div></div>
+            </div>
+            <div>
+                <div></div>
+            </div>
+            <div>
+                <div></div>
+            </div>
+        </div>
+    </div>
 
     <script src="vendor/underscore/underscore-min.js"></script>
     <script src="vendor/jquery/dist/jquery.min.js"></script>
@@ -29,6 +58,8 @@
 
     <script src="js/directives/infinitePager.js"></script>
     <script src="js/directives/sortField.js"></script>
+    <script src="js/directives/restrictInput.js"></script>
+    <script src="js/directives/inlineUserEditor.js"></script>
 
     <script src="js/controllers/usersListController.js"></script>
     <script src="js/controllers/editUserDialogController.js"></script>

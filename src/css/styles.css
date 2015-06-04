@@ -1,0 +1,101 @@
+.users-list {
+
+}
+
+.users-list .users-header {
+    position: relative;
+    margin-right: 20px;
+}
+
+.users-list .users-header > table {
+    position: relative;
+    left: 0;
+    width: calc(100% - 17px);
+}
+
+.users-list .cell-id {
+    width: 10%;
+}
+
+.users-list .cell-first-name {
+    width: 30%;
+}
+
+.users-list .cell-last-name {
+    width: 25%;
+}
+
+.users-list .cell-email {
+    width: 25%;
+}
+
+.users-list .cell-age {
+    width: 10%;
+}
+
+.users-list .delete-button {
+    cursor: pointer;
+    right: -70px;
+    top: 15px;
+    font-size: 1.5em;
+    float: right;
+}
+
+.users-list .users-body {
+    overflow: auto;
+    position: absolute;
+    top: 183px;
+    bottom: 85px;
+}
+
+.users-list .users-body .action-button {
+    width: 20px;
+    height: 20px;
+    font-size: 1.1em;
+}
+
+.users-list .users-body .user {
+    cursor: pointer;
+}
+
+.users-list .paging-section {
+    padding-top: 5px;
+}
+
+.sort-field {
+    display: inline-block;
+    margin-bottom: 3px;
+}
+
+.user {
+    padding: 10px 0;
+    margin-bottom: 0;
+    border-top: solid 1px silver;
+}
+
+.user.selected {
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+}
+
+.edit-inline .action-bar {
+    margin-top: 10px;
+    padding-top: 5px;
+}
+
+.app-load-spinner {
+    position: fixed !important;
+    left: 50%;
+    top: 50%;
+    margin-left: -43px;
+    margin-top: -43px;
+    width: auto !important;
+    height: auto !important;
+
+    transform: scale(0.43);
+    -webkit-text-replace: scale(0.43);
+}
+
+.create-button{
+    margin-right: 30px;
+}

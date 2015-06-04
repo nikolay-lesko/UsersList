@@ -12,10 +12,6 @@
                     url: '/',
                     templateUrl: 'views/list.html',
                     controller: 'UsersListController'
-                })
-                .state('home.config', {
-                    url: '/config',
-                    templateUrl: 'views/config.html'
                 });
 
             $urlRouterProvider.otherwise('/');

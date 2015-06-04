@@ -24,12 +24,19 @@
                         users = _.filter(users, createSearchPredicate(search));
                     }
 
-                    users = _.sortBy(users, sort.Field);
+                    users = _.sortBy(users, function (user) {
+                        var value = user[sort.Field];
+
+                        if (_.isString(value)) {
+                            return value.toLowerCase();
+                        }
+                        return value;
+                    });
+
                     if (sort.Desc) {
                         users.reverse();
                     }
 
-                    //pageIndex = Math.min(pageIndex, Math.max((users.length / pageSize) - 1, 0));
                     pageIndex = Math.min(Math.max(pageIndex, 1), Math.ceil(users.length / pageSize));
 
                     var start = (pageIndex - 1) * pageSize;
@@ -54,9 +61,34 @@
                         if (index != -1) {
                             FakeDataService.Users.splice(index, 1);
                         }
-                    })
+                    });
+
+                    return $q.when(true);
+                },
+                save: function (user) {
+
+                    var stored = _.findWhere(FakeDataService.Users, {Id: user.Id});
+
+                    if (stored) {
+                        _.extend(stored, user);
+                    }
+                    else {
+                        stored = user;
+
+                        if (!stored.Id) {
+                            var userWithMaxId = _.max(FakeDataService.Users, function (u) {
+                                return u.Id;
+                            });
+
+                            stored.Id = userWithMaxId.Id + 1;
+                        }
+
+                        FakeDataService.Users.push(stored);
+                    }
+
+                    return $q.when(stored);
                 }
-            }
+            };
 
             function createSearchPredicate(search) {
                 return function (user) {
@@ -64,16 +96,22 @@
                         return false;
                     }
 
-                    if (search.FirstName && user.FirstName.indexOf(search.FirstName) == -1) {
-                        return false;
+                    if (search.FirstName) {
+                        if (user.FirstName.toLowerCase().indexOf(search.FirstName.toLowerCase()) == -1) {
+                            return false;
+                        }
                     }
 
-                    if (search.LastName && user.LastName.indexOf(search.LastName) == -1) {
-                        return false;
+                    if (search.LastName) {
+                        if (user.LastName.toLowerCase().indexOf(search.LastName.toLowerCase()) == -1) {
+                            return false;
+                        }
                     }
 
-                    if (search.Email && user.Email.indexOf(search.Email) == -1) {
-                        return false;
+                    if (search.Email) {
+                        if (user.Email.toLowerCase().indexOf(search.Email.toLowerCase()) == -1) {
+                            return false;
+                        }
                     }
 
                     if (search.Age && search.Age.From >= 0 && search.Age.To > 0) {
