@@ -1,0 +1,12 @@
+<span class="sort-field"
+      ng-click="onToggleClick()"
+      ng-class="{ active: current == for }">
+
+    <span ng-transclude></span>
+
+    <button class="btn btn-default glyphicon "
+            ng-class="{ 'glyphicon-sort-by-attributes-alt': desc, 'glyphicon-sort-by-attributes': !desc }"
+            ng-style="{ visibility: current == for ? 'visible' : 'collapse' }">
+    </button>
+
+</span>

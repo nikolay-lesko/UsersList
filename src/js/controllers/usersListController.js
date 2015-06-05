@@ -6,12 +6,10 @@
             $scope.Users = [];
 
             $scope.Pager = {
-                PageSize: 25,
+                PageSize: 50,
+
                 dataSource: function (pageIndex, pageSize) {
                     return UsersService.list(pageIndex, pageSize, $scope.Search, $scope.Sort);
-                },
-                gotoPage: function (pageIndex) {
-                    // will be replaced by infinitePager
                 }
             };
 
@@ -23,7 +21,7 @@
             };
 
             $scope.$watch('Sort.Field+Sort.Desc', function () {
-                $scope.cancelEdit();
+                $scope.cancelInlineEdit();
 
                 $scope.Pager.gotoPage($scope.Pager.PageIndex, true);
             });
@@ -46,7 +44,7 @@
             };
 
             $scope.onSearchChanged = function () {
-                $scope.cancelEdit();
+                $scope.cancelInlineEdit();
 
                 $scope.Pager.gotoPage(1, true);
             };
@@ -92,7 +90,7 @@
             };
 
             $scope.onCreateClick = function () {
-                editUserModal({});
+                editUserModal({Age: 20});
             };
 
             function editUserModal(user) {
@@ -116,12 +114,12 @@
                 editingUserId = user.Id;
             };
 
-            $scope.cancelEdit = function () {
+            $scope.cancelInlineEdit = function () {
                 editingUserId = undefined;
             };
 
             $scope.save = function (editedUser) {
-                $scope.cancelEdit();
+                $scope.cancelInlineEdit();
 
                 UsersService
                     .save(editedUser)

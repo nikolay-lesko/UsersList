@@ -7,7 +7,7 @@
                 confirmDelete: function () {
                     return openDialog({
                         templateUrl: 'views/confirmDeleteDialog.html',
-                        controller: ConfirmationController
+                        controller: 'ConfirmationDialogController'
                     });
                 },
 
@@ -29,14 +29,5 @@
                 return $modal.open(dialogOptions).result;
             }
         });
-
-    function ConfirmationController($scope, $modalInstance) {
-        $scope.onYesClick = function () {
-            $modalInstance.close(true);
-        };
-        $scope.onNoClick = function () {
-            $modalInstance.dismiss('cancel')
-        };
-    }
 
 }(window.angular));

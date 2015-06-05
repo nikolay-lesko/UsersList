@@ -24,7 +24,7 @@
                     }
 
                     pager.Pages = [];
-                    pager.PageSize = 100;
+                    pager.PageSize = pager.PageSize || 100;
                     pager.TotalResults = 0;
                     pager.PageIndex = 0;
 
